@@ -1,0 +1,14 @@
+micronaut:
+  application:
+    name: natsClient
+
+## Health
+endpoints:
+  health:
+    enabled: true
+
+## Nats
+nats:
+  addresses: ${nats_address:localhost}:4223
+  username: ${nats_username:guest}
+  password: ${nats_password:guest}

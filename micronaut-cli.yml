@@ -1,0 +1,6 @@
+applicationType: default
+defaultPackage: br.com.zup.nats
+testFramework: kotest
+sourceLanguage: kotlin
+buildTool: gradle
+features: [annotation-api, app-name, gradle, hibernate-validator, http-client, kotest, kotlin, kotlin-application, logback, nats, netty-server, readme, shade, yaml]

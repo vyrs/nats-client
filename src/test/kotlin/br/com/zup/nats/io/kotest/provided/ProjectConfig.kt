@@ -1,4 +1,4 @@
-package io.kotest.provided
+package br.com.zup.nats.io.kotest.provided
 
 import io.kotest.core.config.AbstractProjectConfig
 import io.micronaut.test.extensions.kotest.MicronautKotestExtension

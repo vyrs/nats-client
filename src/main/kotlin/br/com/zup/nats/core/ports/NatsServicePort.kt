@@ -6,5 +6,7 @@ import javax.inject.Singleton
 
 @Singleton
 interface NatsServicePort {
-    fun sendNats(produto: Produto): ProdutoDto
+    fun sendNatsToPost(produtoEvent: ProdutoEvent): ProdutoDto
+    fun sendNatsToPut(produtoEvent: ProdutoEvent): ProdutoDto
+    fun sendNatsToDelete(id: UUID)
 }

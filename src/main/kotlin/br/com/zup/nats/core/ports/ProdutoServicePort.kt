@@ -7,4 +7,6 @@ import javax.inject.Singleton
 @Singleton
 interface ProdutoServicePort {
     fun saveProduto(produto: Produto): ProdutoDto
+    fun updateProduto(produto: Produto): ProdutoDto
+    fun deleteProduto(id: UUID)
 }

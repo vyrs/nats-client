@@ -14,7 +14,7 @@ class ProdutoController(private val produtoService: ProdutoServicePort) {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 
-    @Post
+        @Post
     fun save(@Body @Valid request: ProdutoDto): ProdutoDto {
 
         logger.info("Salvando produto!")
@@ -22,5 +22,23 @@ class ProdutoController(private val produtoService: ProdutoServicePort) {
         val saved = produtoService.saveProduto(ProdutoConverter.produtoDtoToProduto(request))
 
         return saved
+    }
+
+    @Put("/{id}")
+    fun update(@PathVariable id: UUID, @Body @Valid request: ProdutoDto): ProdutoDto {
+
+        logger.info("Atualizando produto!")
+
+        val updated = produtoService.updateProduto(ProdutoConverter.produtoPutDtoToProduto(id, request))
+
+        return updated
+    }
+
+    @Delete("/{id}")
+    fun delete(@PathVariable id: UUID) {
+
+        logger.info("Deletando produto!")
+
+        produtoService.deleteProduto(id)
     }
 }

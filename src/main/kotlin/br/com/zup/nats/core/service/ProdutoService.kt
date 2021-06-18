@@ -8,7 +8,15 @@ import javax.inject.Singleton
 
 @Singleton
 class ProdutoService(private val natsService: NatsServicePort): ProdutoServicePort {
-    override fun saveProduto(produto: Produto): ProdutoDto {
-        return natsService.sendNats(produto)
+        override fun saveProduto(produto: Produto): ProdutoDto {
+        return natsService.sendNatsToPost(ProdutoConverter.produtoToProdutoEvent(produto))
+    }
+
+    override fun updateProduto(produto: Produto): ProdutoDto {
+        return natsService.sendNatsToPut(ProdutoConverter.produtoToProdutoEvent(produto))
+    }
+
+    override fun deleteProduto(id: UUID) {
+        natsService.sendNatsToDelete(id)
     }
 }

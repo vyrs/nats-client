@@ -8,5 +8,5 @@ import io.micronaut.nats.annotation.Subject
 interface ProdutoClient {
 
     @Subject("produto")
-    fun send(produto: Produto)
+    fun send(eventInformation: EventInformation)
 }

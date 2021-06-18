@@ -5,6 +5,11 @@ import br.com.zup.nats.core.model.Produto
 import br.com.zup.nats.core.ports.NatsServicePort
 import br.com.zup.nats.entrypoint.dto.ProdutoDto
 import br.com.zup.nats.infrastructure.client.ProdutoClient
+import br.com.zup.nats.infrastructure.model.EventInformation
+import br.com.zup.nats.infrastructure.model.Events
+import br.com.zup.nats.infrastructure.model.ProdutoEvent
+import org.slf4j.LoggerFactory
+import java.util.*
 import javax.inject.Singleton
 
 @Singleton
@@ -13,8 +18,7 @@ class NatsService(private val client: ProdutoClient): NatsServicePort {
     private val logger = LoggerFactory.getLogger(this::class.java)
 
     
-        override fun sendNatsToPost(produtoEvent: ProdutoEvent): ProdutoDto {
-
+    override fun sendNatsToPost(produtoEvent: ProdutoEvent): ProdutoDto {
         val eventInformation = EventInformation(Events.SAVE_PRODUCT, produtoEvent)
 
         client.send(eventInformation)

@@ -18,6 +18,7 @@ import io.mockk.mockk
 import java.math.BigDecimal
 import java.util.*
 import javax.inject.Inject
+import javax.validation.ConstraintViolationException
 
 @MicronautTest
 class ProdutoControllerTest: AnnotationSpec() {
@@ -37,6 +38,31 @@ class ProdutoControllerTest: AnnotationSpec() {
         MockKAnnotations.init(this)
         produto = Produto(UUID.randomUUID(), "Notebook", "eletronicos", BigDecimal.TEN)
         produtoDto = ProdutoDto("Notebook", "eletronicos", BigDecimal.TEN)
+    }
+
+    @Inject
+    lateinit var produtoControllerNew: ProdutoController
+
+    @Test
+    fun `nao deve cadastrar produto com nome vazio`() {
+        val produto2 = ProdutoDto("", "categoria", BigDecimal.valueOf(200))
+
+        val result = shouldThrow<ConstraintViolationException> {
+            produtoControllerNew.save(produto2)
+        }
+
+        result.message shouldBe "save.request.nome: não deve estar em branco"
+    }
+
+    @Test
+    fun `nao deve cadastrar produto com categoria vazia`() {
+        val produto2 = ProdutoDto("nome", "", BigDecimal.valueOf(200))
+
+        val result = shouldThrow<ConstraintViolationException> {
+            produtoControllerNew.save(produto2)
+        }
+
+        result.message shouldBe "save.request.categoria: não deve estar em branco"
     }
 
     @Test

@@ -10,6 +10,7 @@ import javax.inject.Singleton
 
 @Singleton
 class ProdutoService(private val natsService: NatsServicePort): ProdutoServicePort {
+
     override fun saveProduto(produto: Produto): ProdutoDto {
         return natsService.sendNatsToPost(ProdutoConverter.produtoToProdutoEvent(produto))
     }

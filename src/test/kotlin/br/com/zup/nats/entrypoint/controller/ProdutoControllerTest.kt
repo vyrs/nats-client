@@ -26,6 +26,9 @@ class ProdutoControllerTest: AnnotationSpec() {
 
     val produtoController = ProdutoController(service)
 
+    @Inject
+    lateinit var produtoControllerNew: ProdutoController
+
     lateinit var produto: Produto
     lateinit var produtoDto: ProdutoDto
 
@@ -40,9 +43,21 @@ class ProdutoControllerTest: AnnotationSpec() {
         produtoDto = ProdutoDto("Notebook", "eletronicos", BigDecimal.TEN)
     }
 
-    @Inject
-    lateinit var produtoControllerNew: ProdutoController
+    // testando validation com Client http:
+    @Test
+    fun `nao deve cadastrar produto com preço negativo`() {
+        val produto2 = ProdutoDto("tgeg", "frt", BigDecimal.valueOf(-10))
+        val request = HttpRequest.POST("/produto", produto2)
 
+        val response = shouldThrow<HttpClientResponseException> {
+            client.toBlocking().exchange(request, ProdutoDto::class.java)
+        }
+
+        response.message shouldBe "request.preco: deve ser maior que 0"
+    }
+
+
+    // testando validation com controller injetada:
     @Test
     fun `nao deve cadastrar produto com nome vazio`() {
         val produto2 = ProdutoDto("", "categoria", BigDecimal.valueOf(200))
@@ -66,23 +81,31 @@ class ProdutoControllerTest: AnnotationSpec() {
     }
 
     @Test
-    fun `nao deve cadastrar produto com preço negativo`() {
-        val produto2 = ProdutoDto("tgeg", "frt", BigDecimal.valueOf(-10))
-        val request = HttpRequest.POST("/produto", produto2)
-
-        val response = shouldThrow<HttpClientResponseException> {
-            client.toBlocking().exchange(request, ProdutoDto::class.java)
-        }
-
-        response.message shouldBe "request.preco: deve ser maior que 0"
-    }
-
-    @Test
     fun `deve cadastrar novo produto`() {
         every { service.saveProduto(produto) } returns produtoDto
 
         val result = produtoController.save(produtoDto)
 
         result.shouldBeTypeOf<ProdutoDto>()
+    }
+
+    @Test
+    fun `deve atualizar produto`() {
+        every { service.updateProduto(produto) } returns produtoDto
+
+        val result = produtoController.update(UUID.randomUUID(), produtoDto)
+
+        result.shouldBeTypeOf<ProdutoDto>()
+    }
+
+    @Test
+    fun `deve deletar produto`() {
+        val id = UUID.randomUUID()
+
+        every { service.deleteProduto(id) } returns Unit
+
+        val result = produtoController.delete(id)
+
+        result.shouldBeTypeOf<Unit>()
     }
 }
